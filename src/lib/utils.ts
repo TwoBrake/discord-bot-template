@@ -8,7 +8,7 @@ import config from "../../config/bot.json";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
-import { RestResponse, Command, Event } from "./interfaces";
+import { Command, Event } from "./interfaces";
 
 // Types
 type Extension = ".ts" | ".js";
@@ -23,15 +23,9 @@ export async function register(
   rest: REST
 ): Promise<void> {
   try {
-    console.log(`Refreshing ${cmds.length} application command(s).`);
-
-    const data: RestResponse[] = (await rest.put(
+    await rest.put(
       Routes.applicationGuildCommands(config.client, config.guild),
       { body: cmds }
-    )) as RestResponse[];
-
-    console.log(
-      `Successfully refreshed ${data.length} application command(s).`
     );
   } catch (e) {
     console.error(e);
