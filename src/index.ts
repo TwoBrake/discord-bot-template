@@ -30,8 +30,8 @@ interface Command {
 }
 
 // Variables
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const commands: RESTPostAPIApplicationCommandsJSONBody[] = [];
+const client = new Client({ intents: [GatewayIntentBits.Guilds] }); // Create the application client.
+const commands: RESTPostAPIApplicationCommandsJSONBody[] = []; // Initialize an array of commands that will be registered when filled.
 
 // * Tell the console that the bot has come online.
 client.once(Events.ClientReady, (user) => {
@@ -90,12 +90,12 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
 
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
-        content: "Something went wrong.",
+        content: "Internal server error.",
         flags: MessageFlags.Ephemeral,
       });
     } else {
       await interaction.reply({
-        content: "Something went wrong.",
+        content: "Internal server error.",
         flags: MessageFlags.Ephemeral,
       });
     }
