@@ -3,31 +3,16 @@ import dotenv from "dotenv";
 import {
   Client,
   Collection,
-  CommandInteraction,
   Events,
   GatewayIntentBits,
   Interaction,
   MessageFlags,
   REST,
   RESTPostAPIApplicationCommandsJSONBody,
-  SlashCommandBuilder,
 } from "discord.js";
-import { register } from "./lib/utils";
-import fs from "node:fs";
-import path, { dirname } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fetchFiles, register } from "./lib/utils";
+import { ExtendedClient, Command, Event } from "./lib/interfaces";
 dotenv.config(); // Make sure environment variables have been loaded (mostly used for production instances).
-
-// Interfaces
-interface ExtendedClient extends Client {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  commands: Collection<string, any>;
-}
-
-interface Command {
-  data: SlashCommandBuilder;
-  execute: (interaction: CommandInteraction) => Promise<void>;
-}
 
 // Variables
 const client = new Client({ intents: [GatewayIntentBits.Guilds] }); // Create the application client.
@@ -39,43 +24,44 @@ client.once(Events.ClientReady, (user) => {
 });
 
 // * Create and setup collection for commands.
-(client as ExtendedClient).commands = new Collection();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const location = path.join(__dirname, "commands");
-const cmds = fs.readdirSync(location);
 const rest = new REST().setToken(String(process.env.BOT_TOKEN));
+(client as ExtendedClient).commands = new Collection();
 
-// * Get command files from commands folder.
-for (const folder of cmds) {
-  const cmdPath = path.join(location, folder);
-  const files = fs.readdirSync(cmdPath).filter((file) => file.endsWith(".ts"));
+fetchFiles("src/commands")
+  .then((cmds) => {
+    cmds = cmds as Command[];
+    cmds.forEach((cmd) => {
+      (client as ExtendedClient).commands.set(cmd.data.name, cmd);
+      commands.push(cmd.data.toJSON());
+    });
+  })
+  .then(async () => {
+    await register(commands, rest); // Register all commands to client.
+  });
 
-  for (const file of files) {
-    const filePath = path.join(cmdPath, file);
-    import(pathToFileURL(filePath).href)
-      .then((mod) => {
-        const cmd: Command = mod.data as Command;
-        (client as ExtendedClient).commands.set(cmd.data.name, cmd);
-        commands.push(cmd.data.toJSON());
-      })
-      .catch((e) => {
-        console.error(e);
-      })
-      .then(async () => {
-        await register(commands, rest);
-      });
-  }
-}
+// * Setup events.
+fetchFiles("src/events").then((events) => {
+  events = events as Event[];
+  console.log(`Refreshing ${events.length} event(s).`);
+  events.forEach((event) => {
+    if (event.once) {
+      client.once(event.event, (...args) => event.execute(...args));
+    } else {
+      client.on(event.event, (...args) => event.execute(...args));
+    }
+  });
+  console.log(`Successfully refreshed ${events.length} event(s).`);
+});
 
 // * Listen for when an interaction is being created.
 client.on(Events.InteractionCreate, async (interaction: Interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const cmd: Command = (client as ExtendedClient).commands.get(
+  const cmd: Command | undefined = (client as ExtendedClient).commands.get(
     interaction.commandName
   );
 
+  // If the command was for some reason not added to the collection, then make sure it can't execute it's execution function.
   if (!cmd) {
     console.error(
       `${interaction.commandName} was not found in the collection.`
@@ -104,4 +90,4 @@ client.on(Events.InteractionCreate, async (interaction: Interaction) => {
 
 // * Login to the bot account.
 client.login(process.env.BOT_TOKEN);
-export default client;
+export default client as ExtendedClient;

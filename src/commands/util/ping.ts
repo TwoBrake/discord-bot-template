@@ -1,7 +1,7 @@
 // Resources
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 
-export const data = {
+export default {
   data: new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Returns a response."),
