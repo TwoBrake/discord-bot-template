@@ -10,12 +10,3 @@ export default new Command({
     await interaction.reply(`Hey there ${interaction.user.tag}!`);
   },
 });
-
-// export default {
-//   data: new SlashCommandBuilder()
-//     .setName("ping")
-//     .setDescription("Returns a response."),
-//   execute: async (interaction: CommandInteraction) => {
-//     await interaction.reply(`Hey there ${interaction.user.tag}!`);
-//   },
-// };

@@ -3,11 +3,12 @@ import { fetchFiles, register } from "../../lib/utils";
 import Command from "../Command";
 import { client } from "../..";
 import {
-  Collection,
   REST,
   RESTPostAPIApplicationCommandsJSONBody,
+  Routes,
 } from "discord.js";
 import { logger } from "../../lib/logger";
+import config from "../../../config/bot.json";
 
 /**
  * Allows you to load commands from a specific directory.
@@ -34,9 +35,18 @@ export default class Commands {
   /**
    * Refreshes the command files.
    */
-  public refresh(): void {
-    client.commands = new Collection();
-    this.registerCmds();
+  public async refresh(): Promise<void> {
+    client.commands.clear();
+    await this.rest
+      .put(Routes.applicationGuildCommands(config.client, config.guild), {
+        body: [],
+      })
+      .then(() => {
+        this.registerCmds();
+      })
+      .catch((e) => {
+        logger.error(String(e));
+      });
   }
 
   /**

@@ -6,7 +6,7 @@ import { Command } from "../../lib/interfaces";
 
 export default new Event({
   event: Events.InteractionCreate,
-  once: true,
+  once: false,
   execute: async (interaction: Interaction) => {
     if (!interaction.isChatInputCommand()) return;
 

@@ -60,7 +60,7 @@ export async function fetchFiles(
       await import(pathToFileURL(filePath).href)
         .then((mod) => {
           const file: Command | Event = mod.default;
-          theFiles.push(file);
+          theFiles.push(file as Command & Event);
         })
         .catch((e) => {
           console.error(e);

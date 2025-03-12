@@ -1,6 +1,7 @@
 // Resources
 import { Client, Events } from "discord.js";
 import Event from "../../components/Event";
+import { logger } from "../../lib/logger";
 
 export default new Event({
   event: Events.ClientReady,
@@ -8,6 +9,6 @@ export default new Event({
   execute: (client: Client) => {
     if (!client.user) return;
 
-    console.log(client.user.tag);
+    logger.info(`${client.user.tag} has successfully come online!`);
   },
 });

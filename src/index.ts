@@ -12,9 +12,11 @@ const client: ExtendedClient = new Client({
 }) as ExtendedClient; // Create the application client.
 client.commands = new Collection();
 
-// * Create and setup collection for commands.
-const commands = new Commands("src/commands").load();
-const events = new Events("src/events").load();
+// * Create commands and events from default folders.
+const commands = new Commands("src/commands");
+const events = new Events("src/events");
+commands.load();
+events.load();
 
 // * Login to the bot account.
 client.login(process.env.BOT_TOKEN);
