@@ -1,7 +1,8 @@
 // Resources
 import { Client, Events } from "discord.js";
+import Event from "../../components/Event";
 
-export default {
+export default new Event({
   event: Events.ClientReady,
   once: true,
   execute: (client: Client) => {
@@ -9,4 +10,4 @@ export default {
 
     console.log(client.user.tag);
   },
-};
+});
