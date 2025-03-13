@@ -1,8 +1,8 @@
 // Resources
-import { Event } from "../../lib/interfaces";
 import { logger } from "../../lib/logger";
 import { fetchFiles } from "../../lib/utils";
 import { client } from "../..";
+import { Event } from "../../lib/interfaces";
 
 export default class Events {
   private readonly path: string;

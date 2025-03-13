@@ -1,13 +1,6 @@
 // Resources
 import { Events } from "discord.js";
-
-// Interfaces
-interface EventProps {
-  event: Events;
-  once: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  execute: (...args: any[]) => void | Promise<void>;
-}
+import * as Interfaces from "../lib/interfaces";
 
 /**
  * Creates an event instance.
@@ -21,7 +14,7 @@ export default class Event {
   /**
    * @param props The properties of the event.
    */
-  constructor(props: EventProps) {
+  constructor(props: Interfaces.Event) {
     this.event = props.event;
     this.once = props.once;
     this.execute = props.execute;

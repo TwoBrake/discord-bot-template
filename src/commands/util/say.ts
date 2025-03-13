@@ -9,13 +9,18 @@ import {
   TextInputStyle,
 } from "discord.js";
 import Command from "../../components/Command";
-import ComponentListener, { Types } from "../../components/ComponentListener";
+import ComponentListener, {
+  EventType,
+} from "../../components/ComponentListener";
 
 // Variables
 const modalListen = new ComponentListener("say");
-modalListen.on(Types.OnCreate, async (interaction: ModalSubmitInteraction) => {
-  await interaction.reply("hey");
-});
+modalListen.on(
+  EventType.OnCreate,
+  async (interaction: ModalSubmitInteraction) => {
+    await interaction.reply("hey");
+  }
+);
 
 export default new Command({
   data: new SlashCommandBuilder()

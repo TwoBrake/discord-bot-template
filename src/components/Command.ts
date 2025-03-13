@@ -1,11 +1,6 @@
 // Resources
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-
-// Interfaces
-interface CommandProps {
-  data: SlashCommandBuilder;
-  execute: (interaction: CommandInteraction) => Promise<void>;
-}
+import * as Interfaces from "../lib/interfaces";
 
 /**
  * Creates a slash command instance.
@@ -13,12 +8,14 @@ interface CommandProps {
 export default class Command {
   public readonly data: SlashCommandBuilder;
   public readonly execute: (interaction: CommandInteraction) => Promise<void>;
+  public readonly options: Interfaces.CommandOptions;
 
   /**
    * @param props The commands properties.
    */
-  constructor(props: CommandProps) {
+  constructor(props: Interfaces.Command) {
     this.data = props.data;
     this.execute = props.execute;
+    this.options = props.options || {};
   }
 }
