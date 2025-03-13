@@ -1,7 +1,7 @@
 // Resources
 import EventEmitter from "node:events";
 import { client } from "../index";
-import { Events, Interaction, InteractionType } from "discord.js";
+import { Events, Interaction } from "discord.js";
 
 // Variables
 export enum ComponentListenerEvent {
@@ -9,13 +9,13 @@ export enum ComponentListenerEvent {
 }
 
 export enum ComponentListenerInteraction {
-  Select = "select",
-  Button = "button",
-  Context = "context",
-  Command = InteractionType.ApplicationCommand,
-  Modal = InteractionType.ModalSubmit,
-  Autocomplete = InteractionType.ApplicationCommandAutocomplete,
-  Any = "any",
+  Select,
+  Button,
+  Context,
+  Command,
+  Modal,
+  Autocomplete,
+  Any,
 }
 
 /**
@@ -42,6 +42,24 @@ export default class ComponentListener extends EventEmitter {
   }
 }
 
-function getEquivalent(interaction: Interaction): boolean {
-  return interaction ? true : false;
+function getEquivalent(
+  interaction: Interaction,
+  type: ComponentListenerInteraction
+): boolean {
+  switch (type) {
+    case ComponentListenerInteraction.Button:
+      return interaction.isButton();
+    case ComponentListenerInteraction.Autocomplete:
+      return interaction.isAutocomplete();
+    case ComponentListenerInteraction.Command:
+      return interaction.isChatInputCommand();
+    case ComponentListenerInteraction.Context:
+      return interaction.isContextMenuCommand();
+    case ComponentListenerInteraction.Modal:
+      return interaction.isModalSubmit();
+    case ComponentListenerInteraction.Select:
+      return interaction.isAnySelectMenu();
+    case ComponentListenerInteraction.Any:
+      return true;
+  }
 }
