@@ -10,13 +10,13 @@ import {
 } from "discord.js";
 import Command from "../../components/Command";
 import ComponentListener, {
-  EventType,
+  ComponentListenerEvent,
 } from "../../components/ComponentListener";
 
 // Variables
 const modalListen = new ComponentListener("say");
 modalListen.on(
-  EventType.OnCreate,
+  ComponentListenerEvent.OnCreate,
   async (interaction: ModalSubmitInteraction) => {
     await interaction.reply("hey");
   }

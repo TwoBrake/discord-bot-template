@@ -1,27 +1,29 @@
 // Resources
 import EventEmitter from "node:events";
 import { client } from "../index";
-import { Events, Interaction } from "discord.js";
+import { Events, Interaction, InteractionType } from "discord.js";
 
 // Variables
-export const EventType = {
-  OnCreate: Symbol("create"),
-};
+export enum ComponentListenerEvent {
+  OnCreate = "create",
+}
 
-export const ComponentType = {
-  Select: Symbol("select"),
-  Button: Symbol("button"),
-  Context: Symbol("context"),
-  Command: Symbol("command"),
-  Autocomplete: Symbol("autocomplete"),
-  Any: Symbol("any"),
-};
+export enum ComponentListenerInteraction {
+  Select = "select",
+  Button = "button",
+  Context = "context",
+  Command = InteractionType.ApplicationCommand,
+  Modal = InteractionType.ModalSubmit,
+  Autocomplete = InteractionType.ApplicationCommandAutocomplete,
+  Any = "any",
+}
 
 /**
  * Creates a component listener instance.
  */
 export default class ComponentListener extends EventEmitter {
   private readonly id: string;
+  private readonly interactionType: ComponentListenerInteraction;
 
   /**
    * @param id The ID of the interaction to listen for.
@@ -34,8 +36,12 @@ export default class ComponentListener extends EventEmitter {
       if (!interaction.isModalSubmit()) return; // TODO: Later allow for different types of interactions from type commented out above.
 
       if (this.id === interaction.customId) {
-        this.emit(EventType.OnCreate, interaction);
+        this.emit(ComponentListenerEvent.OnCreate, interaction);
       }
     });
   }
+}
+
+function getEquivalent(interaction: Interaction): boolean {
+  return interaction ? true : false;
 }
