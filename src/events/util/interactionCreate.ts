@@ -1,5 +1,5 @@
 // Resources
-import { Events, Interaction, MessageFlags } from "discord.js";
+import { Collection, Events, Interaction, MessageFlags } from "discord.js";
 import { client } from "../..";
 import Event from "../../components/Event";
 import { Command } from "../../lib/interfaces";
@@ -28,7 +28,9 @@ export default new Event({
     try {
       // * Run checks for command options.
       if (cmd.options) {
-        if (cmd.options.ownerOnly && interaction.user.id !== config.owner) {
+        const owner = config.owner === interaction.user.id;
+
+        if (cmd.options.ownerOnly && !owner) {
           await interaction.reply({
             content: "You must be the bots owner to run this command.",
             flags: MessageFlags.Ephemeral,
@@ -36,17 +38,39 @@ export default new Event({
           return;
         }
 
-        if (cmd.options.developerOnly) {
-          const hasPerms = config.developers.filter(
-            (id) => id === interaction.user.id
-          );
-
-          if (!hasPerms) {
+        if (cmd.options.developerOnly && !owner) {
+          if (!config.developers.includes(interaction.user.id)) {
             await interaction.reply({
               content: "You must be a bot developer to run this command.",
               flags: MessageFlags.Ephemeral,
             });
             return;
+          }
+        }
+
+        if (cmd.options.cooldown) {
+          client.cooldowns.set(cmd.data.name, new Collection());
+
+          const now = new Date();
+          const timestamps = client.cooldowns.get(cmd.data.name);
+
+          if (timestamps?.has(interaction.user.id)) {
+            const expiration =
+              timestamps.get(interaction.user.id) || 0 + cmd.options.cooldown;
+
+            if (now < expiration) {
+              await interaction.reply({
+                content: "You are on cooldown for this command.",
+                flags: MessageFlags.Ephemeral,
+              });
+              return;
+            }
+
+            timestamps.set(interaction.user.id, now);
+            setTimeout(
+              () => timestamps.delete(interaction.user.id),
+              cmd.options.cooldown
+            );
           }
         }
       }

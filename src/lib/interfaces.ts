@@ -32,4 +32,5 @@ export interface Event {
 
 export interface ExtendedClient extends Client {
   commands: Collection<string, Command>;
+  cooldowns: Collection<string, Collection<string, Date>>;
 }

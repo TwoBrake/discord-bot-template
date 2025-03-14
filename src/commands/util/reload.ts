@@ -30,4 +30,7 @@ export default new Command({
       content: "Successfully reloaded commands and events.",
     });
   },
+  options: {
+    ownerOnly: true,
+  },
 });

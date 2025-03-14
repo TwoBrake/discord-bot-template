@@ -13,7 +13,10 @@ dotenv.config(); // Make sure environment variables have been loaded (mostly use
 const client: ExtendedClient = new Client({
   intents: config.intents,
 }) as ExtendedClient; // Create the application client.
+
+// * Add internal client collections.
 client.commands = new Collection();
+client.cooldowns = new Collection();
 
 // * Create commands and events from default folders.
 const commands = new Commands("src/commands");
