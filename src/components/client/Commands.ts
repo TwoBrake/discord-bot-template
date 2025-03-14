@@ -63,7 +63,7 @@ export default class Commands {
         this.toRegister.push(cmd.data.toJSON());
       });
       await register(this.toRegister, this.rest);
-      logger.info(
+      logger.success(
         `Finished refreshing ${this.toRegister.length} slash command(s).`
       );
     } catch (e) {

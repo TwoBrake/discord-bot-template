@@ -22,7 +22,7 @@ export default class Events {
           client.on(event.event, (...args) => event.execute(...args));
         }
       });
-      logger.info(`Finished refreshing ${events.length} event(s).`);
+      logger.success(`Finished refreshing ${events.length} event(s).`);
     });
   }
 }

@@ -9,6 +9,6 @@ export default new Event({
   execute: (client: Client) => {
     if (!client.user) return;
 
-    logger.info(`${client.user.tag} has successfully come online!`);
+    logger.success(`${client.user.tag} has successfully come online!`);
   },
 });

@@ -4,7 +4,7 @@ import {
   CommandInteraction,
   Client,
   Collection,
-  Events,
+  ClientEvents,
 } from "discord.js";
 
 export interface RestResponse {
@@ -24,7 +24,7 @@ export interface Command {
 }
 
 export interface Event {
-  event: Events;
+  event: keyof ClientEvents;
   once: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   execute: (...args: any[]) => void | Promise<void>;

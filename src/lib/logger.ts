@@ -1,13 +1,27 @@
 // Resources
 import chalk from "chalk";
 
-class log {
+class Logger {
+  private readonly prefix: string;
+
+  constructor(prefix: string) {
+    this.prefix = `${chalk.bold(chalk.white(`[${prefix}]`))}`;
+  }
+
+  /**
+   * Logs a message to the console for when a successful operation needs to be logged.
+   * @param msg The message to log.
+   */
+  success(msg: string): void {
+    console.log(`${this.prefix}: ${chalk.green(msg)}`);
+  }
+
   /**
    * Logs a message to the console for information purposes.
    * @param msg The message to log.
    */
   info(msg: string): void {
-    console.log(`[INFO]: ${chalk.blue(msg)}`);
+    console.log(`${this.prefix}: ${chalk.blue(msg)}`);
   }
 
   /**
@@ -15,7 +29,7 @@ class log {
    * @param msg The message to log.
    */
   warn(msg: string): void {
-    console.warn(`[WARN]: ${chalk.yellow(msg)}`);
+    console.warn(`${this.prefix}: ${chalk.yellow(msg)}`);
   }
 
   /**
@@ -23,8 +37,8 @@ class log {
    * @param msg The message to log.
    */
   error(msg: string): void {
-    console.error(`[ERROR]: ${chalk.red(msg)}`);
+    console.error(`${this.prefix}: ${chalk.red(msg)}`);
   }
 }
 
-export const logger = new log();
+export const logger = new Logger("BOT");
