@@ -5,7 +5,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import Command from "../../components/Command";
-import config from "../../../config/bot.json";
+import config from "../../../config/bot";
 import { commands } from "../..";
 
 export default new Command({

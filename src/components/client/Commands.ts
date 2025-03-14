@@ -8,7 +8,7 @@ import {
   Routes,
 } from "discord.js";
 import { logger } from "../../lib/logger";
-import config from "../../../config/bot.json";
+import config from "../../../config/bot";
 
 /**
  * Allows you to load commands from a specific directory.

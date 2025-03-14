@@ -4,7 +4,7 @@ import {
   RESTPostAPIApplicationCommandsJSONBody,
   Routes,
 } from "discord.js";
-import config from "../../config/bot.json";
+import config from "../../config/bot";
 import { pathToFileURL } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
