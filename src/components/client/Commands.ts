@@ -16,7 +16,7 @@ import config from "../../../config/bot.json";
 export default class Commands {
   private readonly path: string;
   private toRegister: RESTPostAPIApplicationCommandsJSONBody[] = [];
-  private rest = new REST().setToken(String(process.env.BOT_TOKEN));
+  private readonly rest = new REST().setToken(String(process.env.BOT_TOKEN));
 
   /**
    * @param path The path to search in.
@@ -41,8 +41,9 @@ export default class Commands {
       .put(Routes.applicationGuildCommands(config.client, config.guild), {
         body: [],
       })
-      .then(() => {
-        this.registerCmds();
+      .then(async () => {
+        logger.error("DELETED ALL COMMANDS FOR RELOAD");
+        await this.registerCmds();
       })
       .catch((e) => {
         logger.error(String(e));
@@ -52,27 +53,21 @@ export default class Commands {
   /**
    * Registers the commands.
    */
-  private registerCmds(): void {
-    fetchFiles(this.path)
-      .then((cmds) => {
-        logger.info(`Began refreshing ${cmds.length} slash command(s).`);
-        cmds = cmds as Command[];
-        cmds.forEach((cmd) => {
-          client.commands.set(cmd.data.name, cmd);
-          this.toRegister.push(cmd.data.toJSON());
-        });
-      })
-      .catch((e) => {
-        logger.error(String(e));
-      })
-      .then(async () => {
-        await register(this.toRegister, this.rest);
-        logger.info(
-          `Finished refreshing ${this.toRegister.length} slash command(s).`
-        );
-      })
-      .catch((e) => {
-        logger.error(String(e));
+  private async registerCmds(): Promise<void> {
+    this.toRegister = []; // Clear the to be registered commands array before registering any commands.
+    try {
+      const cmds: Command[] = (await fetchFiles(this.path)) as Command[];
+      logger.info(`Began refreshing ${cmds.length} slash command(s).`);
+      cmds.forEach((cmd) => {
+        client.commands.set(cmd.data.name, cmd);
+        this.toRegister.push(cmd.data.toJSON());
       });
+      await register(this.toRegister, this.rest);
+      logger.info(
+        `Finished refreshing ${this.toRegister.length} slash command(s).`
+      );
+    } catch (e) {
+      logger.error(String(e));
+    }
   }
 }

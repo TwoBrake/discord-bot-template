@@ -1,9 +1,9 @@
 // Resources
 import EventEmitter from "node:events";
 import { client } from "../index";
-import { Events, Interaction } from "discord.js";
+import { Events, Interaction, ModalSubmitInteraction } from "discord.js";
 
-// Variables
+// Enums
 export enum ComponentListenerEvent {
   OnCreate = "create",
 }
@@ -12,7 +12,6 @@ export enum ComponentListenerInteraction {
   Select,
   Button,
   Context,
-  Command,
   Modal,
   Autocomplete,
   Any,
@@ -28,14 +27,15 @@ export default class ComponentListener extends EventEmitter {
   /**
    * @param id The ID of the interaction to listen for.
    */
-  constructor(id: string) {
+  constructor(id: string, interactionType: ComponentListenerInteraction) {
     super();
     this.id = id;
+    this.interactionType = interactionType;
 
     client.on(Events.InteractionCreate, async (interaction: Interaction) => {
-      if (!interaction.isModalSubmit()) return; // TODO: Later allow for different types of interactions from type commented out above.
+      if (!getEquivalent(interaction, this.interactionType)) return; // TODO: Later allow for different types of interactions from type commented out above.
 
-      if (this.id === interaction.customId) {
+      if (this.id === (interaction as ModalSubmitInteraction).customId) {
         this.emit(ComponentListenerEvent.OnCreate, interaction);
       }
     });
@@ -51,8 +51,6 @@ function getEquivalent(
       return interaction.isButton();
     case ComponentListenerInteraction.Autocomplete:
       return interaction.isAutocomplete();
-    case ComponentListenerInteraction.Command:
-      return interaction.isChatInputCommand();
     case ComponentListenerInteraction.Context:
       return interaction.isContextMenuCommand();
     case ComponentListenerInteraction.Modal:

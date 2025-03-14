@@ -2,23 +2,45 @@
 import {
   ActionRowBuilder,
   CommandInteraction,
+  MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
   SlashCommandBuilder,
+  TextChannel,
   TextInputBuilder,
   TextInputStyle,
 } from "discord.js";
 import Command from "../../components/Command";
 import ComponentListener, {
   ComponentListenerEvent,
+  ComponentListenerInteraction,
 } from "../../components/ComponentListener";
 
 // Variables
-const modalListen = new ComponentListener("say");
+const modalListen = new ComponentListener(
+  "say",
+  ComponentListenerInteraction.Modal
+);
 modalListen.on(
   ComponentListenerEvent.OnCreate,
   async (interaction: ModalSubmitInteraction) => {
-    await interaction.reply("hey");
+    const channel: TextChannel = interaction.channel as TextChannel;
+    const msg: string = interaction.fields.getTextInputValue("msg");
+
+    if (!msg) {
+      await interaction.reply({
+        content: "You must provide a message.",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    channel.send(msg);
+
+    await interaction.reply({
+      content: "Sent the message globally.",
+      flags: MessageFlags.Ephemeral,
+    });
   }
 );
 
@@ -33,7 +55,8 @@ export default new Command({
       .setCustomId("msg")
       .setMinLength(1)
       .setMaxLength(200)
-      .setLabel("Message");
+      .setLabel("Message")
+      .setRequired(true);
     const row = new ActionRowBuilder<TextInputBuilder>().addComponents(input);
     const modal = new ModalBuilder()
       .setCustomId("say")

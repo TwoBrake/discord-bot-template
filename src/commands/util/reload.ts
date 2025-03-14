@@ -24,11 +24,10 @@ export default new Command({
       return;
     }
 
-    commands.refresh();
-
-    await interaction.reply({
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    await commands.refresh();
+    await interaction.editReply({
       content: "Successfully reloaded commands and events.",
-      flags: MessageFlags.Ephemeral,
     });
   },
 });
