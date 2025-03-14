@@ -15,6 +15,7 @@ import ComponentListener, {
   ComponentListenerEvent,
   ComponentListenerInteraction,
 } from "../../components/ComponentListener";
+import Embed from "../../components/Embed";
 
 // Variables
 const modalListen = new ComponentListener(
@@ -35,10 +36,22 @@ modalListen.on(
       return;
     }
 
-    channel.send(msg);
+    channel.send({
+      embeds: [
+        new Embed({
+          title: `Message from ${interaction.user.tag}`,
+          description: msg,
+        }),
+      ],
+    });
 
     await interaction.reply({
-      content: "Sent the message globally.",
+      embeds: [
+        new Embed({
+          description: "The operation was successful.",
+          level: "success",
+        }),
+      ],
       flags: MessageFlags.Ephemeral,
     });
   }

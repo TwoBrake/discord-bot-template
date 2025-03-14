@@ -7,6 +7,7 @@ import {
 import Command from "../../components/Command";
 import config from "../../../config/bot";
 import { commands } from "../..";
+import Embed from "../../components/Embed";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -17,8 +18,13 @@ export default new Command({
 
     if (runner.id !== config.owner) {
       await interaction.reply({
-        content:
-          "You do not have the sufficient permissions to run this command.",
+        embeds: [
+          new Embed({
+            description:
+              "You do not have the sufficient permissions to run this command.",
+            level: "error",
+          }),
+        ],
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -27,7 +33,12 @@ export default new Command({
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     await commands.refresh();
     await interaction.editReply({
-      content: "Successfully reloaded commands and events.",
+      embeds: [
+        new Embed({
+          description: "Successfully reloaded commands and events.",
+          level: "success",
+        }),
+      ],
     });
   },
   options: {

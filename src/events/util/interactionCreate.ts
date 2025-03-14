@@ -5,6 +5,7 @@ import Event from "../../components/Event";
 import { Command } from "../../lib/interfaces";
 import { logger } from "../../lib/logger";
 import config from "../../../config/bot";
+import Embed from "../../components/Embed";
 
 export default new Event({
   event: Events.InteractionCreate,
@@ -32,7 +33,12 @@ export default new Event({
 
         if (cmd.options.ownerOnly && !owner) {
           await interaction.reply({
-            content: "You must be the bots owner to run this command.",
+            embeds: [
+              new Embed({
+                description: "You must be the bots owner to run this command.",
+                level: "error",
+              }),
+            ],
             flags: MessageFlags.Ephemeral,
           });
           return;
@@ -41,7 +47,13 @@ export default new Event({
         if (cmd.options.developerOnly && !owner) {
           if (!config.developers.includes(interaction.user.id)) {
             await interaction.reply({
-              content: "You must be a bot developer to run this command.",
+              embeds: [
+                new Embed({
+                  description:
+                    "You must be a bot developer to run this command.",
+                  level: "error",
+                }),
+              ],
               flags: MessageFlags.Ephemeral,
             });
             return;
@@ -60,7 +72,12 @@ export default new Event({
 
             if (now < expiration) {
               await interaction.reply({
-                content: "You are on cooldown for this command.",
+                embeds: [
+                  new Embed({
+                    description: "You are on a cooldown for this command.",
+                    level: "error",
+                  }),
+                ],
                 flags: MessageFlags.Ephemeral,
               });
               return;
@@ -83,12 +100,22 @@ export default new Event({
 
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({
-          content: "Internal server error.",
+          embeds: [
+            new Embed({
+              description: "Internal server error.",
+              level: "error",
+            }),
+          ],
           flags: MessageFlags.Ephemeral,
         });
       } else {
         await interaction.reply({
-          content: "Internal server error.",
+          embeds: [
+            new Embed({
+              description: "Internal server error.",
+              level: "error",
+            }),
+          ],
           flags: MessageFlags.Ephemeral,
         });
       }
