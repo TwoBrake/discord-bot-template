@@ -69,7 +69,7 @@ export default class AccessManager {
 
     const isBotOwner = user.id === config.owner;
     const isDev = config.developers.includes(user.id);
-    const isOwner = user.id === guild?.ownerId;
+    const isGuildOwner = user.id === guild?.ownerId;
 
     // * If user is bot owner, then return early because they are the owner, they have access to everything!
     if (this.options.botOwner && isBotOwner) return true;
@@ -78,7 +78,7 @@ export default class AccessManager {
     if (this.options.botDev && isDev) return true;
 
     // * If user is guild owner, they should have access over everything.
-    if (this.options.owner && isOwner) return true;
+    if (this.options.owner && isGuildOwner) return true;
 
     // * Check if user has roles.
     if (this.options.roles) {
@@ -95,10 +95,12 @@ export default class AccessManager {
     if (this.options.users && this.options.users.includes(user.id)) return true;
 
     // * Check other variables.
-    this.options.other?.forEach((val) => {
+    const allTrue = this.options.other?.forEach((val) => {
       if (!val) return false;
     });
+    if (allTrue) return true;
 
-    return true;
+    // * If any of the checks somehow get here, return false.
+    return false;
   }
 }
