@@ -7,7 +7,7 @@ import {
 import Command from "../../components/Command";
 import config from "../../../config/bot";
 import { commands } from "../..";
-import Embed from "../../components/Embed";
+import Embed, { EmbedType } from "../../components/Embed";
 
 export default new Command({
   data: new SlashCommandBuilder()
@@ -22,7 +22,7 @@ export default new Command({
           new Embed({
             description:
               "You do not have the sufficient permissions to run this command.",
-            level: "error",
+            level: EmbedType.Error,
           }),
         ],
         flags: MessageFlags.Ephemeral,
@@ -36,7 +36,7 @@ export default new Command({
       embeds: [
         new Embed({
           description: "Successfully reloaded commands and events.",
-          level: "success",
+          level: EmbedType.Error,
         }),
       ],
     });

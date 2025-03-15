@@ -5,7 +5,7 @@ import Event from "../../components/Event";
 import { Command } from "../../lib/interfaces";
 import { logger } from "../../lib/logger";
 import config from "../../../config/bot";
-import Embed from "../../components/Embed";
+import Embed, { EmbedType } from "../../components/Embed";
 
 export default new Event({
   event: Events.InteractionCreate,
@@ -36,7 +36,7 @@ export default new Event({
             embeds: [
               new Embed({
                 description: "You must be the bots owner to run this command.",
-                level: "error",
+                level: EmbedType.Error,
               }),
             ],
             flags: MessageFlags.Ephemeral,
@@ -51,7 +51,7 @@ export default new Event({
                 new Embed({
                   description:
                     "You must be a bot developer to run this command.",
-                  level: "error",
+                  level: EmbedType.Error,
                 }),
               ],
               flags: MessageFlags.Ephemeral,
@@ -75,7 +75,7 @@ export default new Event({
                 embeds: [
                   new Embed({
                     description: "You are on a cooldown for this command.",
-                    level: "error",
+                    level: EmbedType.Error,
                   }),
                 ],
                 flags: MessageFlags.Ephemeral,
@@ -103,7 +103,7 @@ export default new Event({
           embeds: [
             new Embed({
               description: "Internal server error.",
-              level: "error",
+              level: EmbedType.Error,
             }),
           ],
           flags: MessageFlags.Ephemeral,
@@ -113,7 +113,7 @@ export default new Event({
           embeds: [
             new Embed({
               description: "Internal server error.",
-              level: "error",
+              level: EmbedType.Error,
             }),
           ],
           flags: MessageFlags.Ephemeral,

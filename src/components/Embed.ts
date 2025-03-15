@@ -1,10 +1,19 @@
 // Resources
-import { ColorResolvable, EmbedBuilder, EmbedData } from "discord.js";
+import { EmbedBuilder, EmbedData } from "discord.js";
 import config from "../../config/bot";
+import { client } from "../index";
+
+// Enums
+export enum EmbedType {
+  Info = "info",
+  Success = "success",
+  Warn = "warn",
+  Error = "error",
+}
 
 // Interfaces
 interface MyEmbedData extends EmbedData {
-  level?: "success" | "info" | "warn" | "error";
+  level?: EmbedType;
 }
 
 /**
@@ -15,29 +24,23 @@ export default class Embed {
    * @param data The embeds data.
    */
   constructor(data: MyEmbedData) {
-    data.level = data.level || "info";
+    data.level = data.level || EmbedType.Info;
     const embed = new EmbedBuilder(data as EmbedData);
 
     // * Apply default options if they are not provided.
     if (!data.footer) {
-      embed.setFooter({ text: "Template Bot" });
+      embed.setFooter({
+        text: client.user?.displayName || "A cool bot.",
+        iconURL: client.user?.avatarURL() || "",
+      });
+    }
+
+    if (!data.timestamp) {
+      embed.setTimestamp(Date.now());
     }
 
     if (!data.color) {
-      switch (data.level) {
-        case "info":
-          embed.setColor(config.theme.info as ColorResolvable);
-          break;
-        case "success":
-          embed.setColor(config.theme.success as ColorResolvable);
-          break;
-        case "warn":
-          embed.setColor(config.theme.warn as ColorResolvable);
-          break;
-        case "error":
-          embed.setColor(config.theme.error as ColorResolvable);
-          break;
-      }
+      embed.setColor(config.theme[data.level.valueOf()]);
     }
 
     if (!data.author) {

@@ -15,7 +15,7 @@ import ComponentListener, {
   ComponentListenerEvent,
   ComponentListenerInteraction,
 } from "../../components/ComponentListener";
-import Embed from "../../components/Embed";
+import Embed, { EmbedType } from "../../components/Embed";
 
 // Variables
 const modalListen = new ComponentListener(
@@ -49,7 +49,7 @@ modalListen.on(
       embeds: [
         new Embed({
           description: "The operation was successful.",
-          level: "success",
+          level: EmbedType.Success,
         }),
       ],
       flags: MessageFlags.Ephemeral,

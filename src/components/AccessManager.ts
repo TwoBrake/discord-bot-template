@@ -62,6 +62,7 @@ export default class AccessManager {
   private runChecks(): boolean {
     const user = this.interaction.user;
     const guild = this.interaction.guild;
+    const member = guild?.members.cache.get(user.id);
 
     // * If not user is found, bail out early.
     if (!user) return false;
@@ -79,11 +80,25 @@ export default class AccessManager {
     // * If user is guild owner, they should have access over everything.
     if (this.options.owner && isOwner) return true;
 
+    // * Check if user has roles.
     if (this.options.roles) {
-      // if (this.options.roles.includes())
+      if (!guild || !member) return false;
+
+      member.roles.cache.forEach((role) => {
+        if (this.options.roles?.includes(role.id)) {
+          return true;
+        }
+      });
     }
 
-    // * If all checks fail, return false.
-    return false;
+    // * Check users.
+    if (this.options.users && this.options.users.includes(user.id)) return true;
+
+    // * Check other variables.
+    this.options.other?.forEach((val) => {
+      if (!val) return false;
+    });
+
+    return true;
   }
 }
