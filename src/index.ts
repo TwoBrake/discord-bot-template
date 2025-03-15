@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import { Client, Collection } from "discord.js";
 import { ExtendedClient } from "./lib/interfaces";
 import Events from "./components/client/Events";
-import Commands from "./components/client/Commands";
+import Commands, { PublishType } from "./components/client/Commands";
 import config from "../config/bot";
 import { logger } from "./lib/logger";
 import death from "death";
@@ -21,7 +21,7 @@ client.cooldowns = new Collection();
 // * Create commands and events from default folders.
 const commands = new Commands("src/commands");
 const events = new Events("src/events");
-commands.load();
+commands.load(PublishType.Guild);
 events.load();
 
 // * Login to the bot account.

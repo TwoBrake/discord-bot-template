@@ -10,6 +10,12 @@ import {
 import { logger } from "../../lib/logger";
 import config from "../../../config/bot";
 
+// Enums
+export enum PublishType {
+  Global,
+  Guild,
+}
+
 /**
  * Allows you to load commands from a specific directory.
  */
@@ -28,8 +34,9 @@ export default class Commands {
   /**
    * Loads the command files.
    */
-  public load(): void {
-    this.registerCmds();
+  public load(type?: PublishType): void {
+    type = type || PublishType.Guild;
+    this.registerCmds(type);
   }
 
   /**
@@ -43,7 +50,7 @@ export default class Commands {
       })
       .then(async () => {
         logger.error("DELETED ALL COMMANDS FOR RELOAD");
-        await this.registerCmds();
+        await this.registerCmds(PublishType.Guild); // Reload only supports guild commands to avoid rate limiting.
       })
       .catch((e) => {
         logger.error(String(e));
@@ -53,7 +60,9 @@ export default class Commands {
   /**
    * Registers the commands.
    */
-  private async registerCmds(): Promise<void> {
+  private async registerCmds(type: PublishType): Promise<void> {
+    if (type === PublishType.Global) return; // Implement this later.
+
     this.toRegister = []; // Clear the to be registered commands array before registering any commands.
     try {
       const cmds: Command[] = (await fetchFiles(this.path)) as Command[];
