@@ -1,6 +1,6 @@
 // Resources
 import {
-  CommandInteraction,
+  ChatInputCommandInteraction,
   MessageFlags,
   SlashCommandBuilder,
 } from "discord.js";
@@ -13,7 +13,7 @@ export default new Command({
   data: new SlashCommandBuilder()
     .setName("reload")
     .setDescription("Reloads commands and events."),
-  execute: async (interaction: CommandInteraction) => {
+  execute: async (interaction: ChatInputCommandInteraction) => {
     const runner = interaction.user;
 
     if (runner.id !== config.owner) {

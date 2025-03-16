@@ -1,10 +1,11 @@
 // Resources
 import {
   SlashCommandBuilder,
-  CommandInteraction,
   Client,
   Collection,
   ClientEvents,
+  SlashCommandSubcommandsOnlyBuilder,
+  ChatInputCommandInteraction,
 } from "discord.js";
 
 export interface RestResponse {
@@ -18,8 +19,8 @@ export interface CommandOptions {
 }
 
 export interface Command {
-  data: SlashCommandBuilder;
-  execute: (interaction: CommandInteraction) => Promise<void>;
+  data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
+  execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
   options?: CommandOptions;
 }
 

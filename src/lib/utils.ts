@@ -9,6 +9,7 @@ import { pathToFileURL } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
 import { Command, Event } from "./interfaces";
+import { PublishType } from "../components/client/Commands";
 
 // Types
 type Extension = ".ts" | ".js";
@@ -20,13 +21,18 @@ type Extension = ".ts" | ".js";
  */
 export async function register(
   cmds: RESTPostAPIApplicationCommandsJSONBody[],
-  rest: REST
+  rest: REST,
+  type: PublishType
 ): Promise<void> {
   try {
-    await rest.put(
-      Routes.applicationGuildCommands(config.client, config.guild),
-      { body: cmds }
-    );
+    if (type === PublishType.Global) {
+      await rest.put(Routes.applicationCommands(config.client), { body: cmds });
+    } else {
+      await rest.put(
+        Routes.applicationGuildCommands(config.client, config.guild),
+        { body: cmds }
+      );
+    }
   } catch (e) {
     console.error(e);
   }

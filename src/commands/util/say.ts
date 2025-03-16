@@ -1,7 +1,7 @@
 // Resources
 import {
   ActionRowBuilder,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   MessageFlags,
   ModalBuilder,
   ModalSubmitInteraction,
@@ -61,7 +61,7 @@ export default new Command({
   data: new SlashCommandBuilder()
     .setName("say")
     .setDescription("Makes the bot say something in the channel."),
-  execute: async (interaction: CommandInteraction) => {
+  execute: async (interaction: ChatInputCommandInteraction) => {
     const input = new TextInputBuilder()
       .setStyle(TextInputStyle.Short)
       .setPlaceholder("Hey ...")

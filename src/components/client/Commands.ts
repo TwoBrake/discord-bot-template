@@ -61,8 +61,6 @@ export default class Commands {
    * Registers the commands.
    */
   private async registerCmds(type: PublishType): Promise<void> {
-    if (type === PublishType.Global) return; // Implement this later.
-
     this.toRegister = []; // Clear the to be registered commands array before registering any commands.
     try {
       const cmds: Command[] = (await fetchFiles(this.path)) as Command[];
@@ -71,7 +69,7 @@ export default class Commands {
         client.commands.set(cmd.data.name, cmd);
         this.toRegister.push(cmd.data.toJSON());
       });
-      await register(this.toRegister, this.rest);
+      await register(this.toRegister, this.rest, type);
       logger.success(
         `Finished refreshing ${this.toRegister.length} slash command(s).`
       );
