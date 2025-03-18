@@ -20,10 +20,10 @@ A simple template for a Discord bot utilizing the [**Discord.js**](https://disco
 npm install
 ```
 
-3. Initialize your local environment files by cloning the example file:
+3. Initialize your local environment files by cloning the example file and initialize your configuration from the example:
 
 ```bash
-cp .env.example .env
+cp .env.example .env && cp config/example.bot.ts config/bot.ts
 ```
 
 4. It's as simple as that! You can now start the bot:
