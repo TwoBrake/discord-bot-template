@@ -111,3 +111,20 @@ export default new Event({
   },
 });
 ```
+
+**AccessManager**:
+This class allows you to manage access to commands and events.
+
+```typescript
+import AccessManager from "../path/to/AccessManager";
+
+const auth = new AccessManager(interaction, {
+  ownerOnly: true,
+});
+
+if (!auth.has()) return; // Authorization failed.
+
+auth.restrict(() => {
+  console.log("You can also do it like this!");
+});
+```
