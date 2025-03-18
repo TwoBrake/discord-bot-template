@@ -21,7 +21,9 @@ client.cooldowns = new Collection();
 // * Create commands and events from default folders.
 const commands = new Commands("src/commands");
 const events = new Events("src/events");
-commands.load(PublishType.Guild);
+(async () => {
+  await commands.load(PublishType.Guild);
+})();
 events.load();
 
 // * Login to the bot account.

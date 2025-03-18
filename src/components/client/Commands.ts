@@ -34,9 +34,9 @@ export default class Commands {
   /**
    * Loads the command files.
    */
-  public load(type?: PublishType): void {
+  public async load(type?: PublishType): Promise<void> {
     type = type || PublishType.Guild;
-    this.registerCmds(type);
+    await this.registerCmds(type);
   }
 
   /**

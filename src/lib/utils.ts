@@ -10,6 +10,7 @@ import path from "node:path";
 import fs from "node:fs";
 import { Command, Event } from "./interfaces";
 import { PublishType } from "../components/client/Commands";
+import { logger } from "./logger";
 
 // Types
 type Extension = ".ts" | ".js";
@@ -39,6 +40,28 @@ export async function register(
 }
 
 /**
+ * Recursively fetches files from a directory and its subdirectories.
+ * @param dir The directory to search in.
+ * @param extension The extension of the files to filter.
+ * @returns {Promise<string[]>} An array of file paths.
+ */
+async function fetchFilesRecursively(
+  dir: string,
+  extension: Extension
+): Promise<string[]> {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = await Promise.all(
+    entries.map(async (entry) => {
+      const res = path.resolve(dir, entry.name);
+      return entry.isDirectory() ? fetchFilesRecursively(res, extension) : res;
+    })
+  );
+  return Array.prototype
+    .concat(...files)
+    .filter((file) => file.endsWith(extension));
+}
+
+/**
  * Fetches the files in a specific directory.
  * @param filesPath The path to the directory to search in.
  * @param extension The extension of the files to filter (default is .ts).
@@ -46,32 +69,27 @@ export async function register(
  */
 export async function fetchFiles(
   filesPath: string,
-  extension?: Extension
+  extension: Extension = ".ts"
 ): Promise<Command[] | Event[]> {
-  extension = extension || ".ts";
-
   const theFiles: Command[] | Event[] = [];
   const location = path.join(process.cwd(), filesPath);
-  const cmds = fs.readdirSync(location);
+  const files = await fetchFilesRecursively(location, extension);
 
-  // * Get command files from commands folder.
-  for (const folder of cmds) {
-    const cmdPath = path.join(location, folder);
-    const files = fs
-      .readdirSync(cmdPath)
-      .filter((file) => file.endsWith(extension));
+  for (const filePath of files) {
+    await import(pathToFileURL(filePath).href)
+      .then((mod) => {
+        const file: Command | Event = mod.default;
 
-    for (const file of files) {
-      const filePath = path.join(cmdPath, file);
-      await import(pathToFileURL(filePath).href)
-        .then((mod) => {
-          const file: Command | Event = mod.default;
+        // * Make sure file is a valid command or event.
+        if (mod.default.execute) {
           theFiles.push(file as Command & Event);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-    }
+        } else {
+          logger.warn(`'${filePath}' is not a valid command or event.`);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }
 
   return theFiles;
