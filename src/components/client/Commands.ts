@@ -45,9 +45,15 @@ export default class Commands {
   public async refresh(): Promise<void> {
     client.commands.clear();
     await this.rest
-      .put(Routes.applicationGuildCommands(config.client, config.guild), {
-        body: [],
-      })
+      .put(
+        Routes.applicationGuildCommands(
+          String(process.env.CLIENT_ID),
+          config.guild
+        ),
+        {
+          body: [],
+        }
+      )
       .then(async () => {
         logger.error("DELETED ALL COMMANDS FOR RELOAD");
         await this.registerCmds(PublishType.Guild); // Reload only supports guild commands to avoid rate limiting.

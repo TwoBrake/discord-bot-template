@@ -2,9 +2,9 @@
 import { GatewayIntentBits } from "discord.js";
 
 export default {
-  guild: "1349221879830810665",
-  owner: "705529912374591930",
-  developers: ["1"],
+  guild: "DEVELOPMENT_GUILD_ID",
+  owner: "BOT_OWNER_ID",
+  developers: ["A_DEVELOPER_ID"],
   intents: [GatewayIntentBits.Guilds],
   theme: {
     info: "#121212",

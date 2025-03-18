@@ -7,6 +7,7 @@ import {
   ModalSubmitInteraction,
 } from "discord.js";
 import config from "../../config/bot";
+import { AccessManagerOptions } from "../lib/interfaces";
 
 // Types
 type Interactions =
@@ -18,21 +19,11 @@ type Interactions =
 
 type Function = () => void | (() => Promise<void>);
 
-// Interfaces
-interface AccessManagerProps {
-  botOwner?: boolean;
-  botDev?: boolean;
-  owner?: boolean;
-  roles?: string[];
-  users?: string[];
-  other?: boolean[];
-}
-
 export default class AccessManager {
   private readonly interaction: Interactions;
-  private readonly options: AccessManagerProps;
+  private readonly options: AccessManagerOptions;
 
-  constructor(interaction: Interactions, props: AccessManagerProps) {
+  constructor(interaction: Interactions, props: AccessManagerOptions) {
     this.interaction = interaction;
     this.options = props;
   }

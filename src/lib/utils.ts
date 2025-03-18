@@ -27,10 +27,16 @@ export async function register(
 ): Promise<void> {
   try {
     if (type === PublishType.Global) {
-      await rest.put(Routes.applicationCommands(config.client), { body: cmds });
+      await rest.put(
+        Routes.applicationCommands(String(process.env.CLIENT_ID)),
+        { body: cmds }
+      );
     } else {
       await rest.put(
-        Routes.applicationGuildCommands(config.client, config.guild),
+        Routes.applicationGuildCommands(
+          String(process.env.CLIENT_ID),
+          config.guild
+        ),
         { body: cmds }
       );
     }

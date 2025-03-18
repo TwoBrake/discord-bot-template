@@ -40,7 +40,11 @@ export default new Command({
   },
 });
 
-async function reload(interaction: ChatInputCommandInteraction) {
+/**
+ * Internal command function for reloading all slash commands to development guild provided in configuration.
+  @param interaction The command interaction.
+*/
+async function reload(interaction: ChatInputCommandInteraction): Promise<void> {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
   try {
     await commands.refresh();
@@ -65,7 +69,13 @@ async function reload(interaction: ChatInputCommandInteraction) {
   }
 }
 
-async function publish(interaction: ChatInputCommandInteraction) {
+/**
+ * Internal command function for publishing all slash commands to client (using client ID from configuration).
+ * @param interaction The command interaction.
+ */
+async function publish(
+  interaction: ChatInputCommandInteraction
+): Promise<void> {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
   try {
     await commands.load(PublishType.Global);
