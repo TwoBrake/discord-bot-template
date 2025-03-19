@@ -6,6 +6,7 @@ import {
   ClientEvents,
   SlashCommandSubcommandsOnlyBuilder,
   ChatInputCommandInteraction,
+  GatewayIntentBits,
 } from "discord.js";
 
 // * Used for a base for Rest API responses (we only need the ID).
@@ -49,4 +50,18 @@ export interface AccessManagerOptions {
   roles?: string[];
   users?: string[];
   other?: boolean[];
+}
+
+// * Used for the configuration.
+export interface Configuration {
+  guild: string;
+  owner: string;
+  developers: string[];
+  intents: GatewayIntentBits[];
+  theme: {
+    info: string;
+    success: string;
+    warn: string;
+    error: string;
+  };
 }

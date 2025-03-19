@@ -1,7 +1,8 @@
 // Resources
 import { GatewayIntentBits } from "discord.js";
+import { Configuration } from "../src/lib/interfaces";
 
-export default {
+const config: Configuration = {
   guild: "DEVELOPMENT_GUILD_ID",
   owner: "BOT_OWNER_ID",
   developers: ["A_DEVELOPER_ID"],
@@ -13,3 +14,5 @@ export default {
     error: "#dc2626",
   },
 };
+
+export default config;
