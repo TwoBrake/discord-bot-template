@@ -137,3 +137,6 @@ dist
 
 # configuration
 config/bot.ts
+
+# tests
+tests
