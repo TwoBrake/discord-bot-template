@@ -96,7 +96,7 @@ export default new Event({
       await cmd.execute(interaction);
     } catch (e) {
       // * Handle any and all command related errors.
-      logger.error(String(e));
+      logger.error(e as Error);
 
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({

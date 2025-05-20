@@ -36,8 +36,12 @@ class Logger {
    * Logs a message to the console for when an error may occur.
    * @param msg The message to log.
    */
-  error(msg: string): void {
-    console.error(`${this.prefix}: ${chalk.red(msg)}`);
+  error(msg: string | Error): void {
+    if (msg instanceof Error) {
+      console.error(`${this.prefix}: ${msg.stack || msg.message}`);
+    } else {
+      console.error(`${this.prefix}: ${chalk.red(msg)}`);
+    }
   }
 }
 
