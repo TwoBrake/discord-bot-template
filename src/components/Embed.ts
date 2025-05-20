@@ -1,5 +1,5 @@
 // Resources
-import { EmbedBuilder, EmbedData } from "discord.js";
+import { ColorResolvable, EmbedBuilder, EmbedData } from "discord.js";
 import config from "../../config/bot";
 import { client } from "../index";
 
@@ -40,7 +40,8 @@ export default class Embed {
     }
 
     if (!data.color) {
-      embed.setColor(config.theme[data.level.valueOf()]);
+      const color = config.theme[data.level];
+      embed.setColor((color as ColorResolvable) || "Random");
     }
 
     if (!data.author) {

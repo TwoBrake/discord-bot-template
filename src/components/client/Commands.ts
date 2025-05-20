@@ -11,6 +11,9 @@ import { logger } from "../../lib/logger";
 import config from "../../../config/bot";
 
 // Enums
+/**
+ * An enum representing a command group's publish type. Global meaning that the commands are published in a global fashion (across all servers) and guild meaning that it is published to the development guild provided in the configuration.
+ */
 export enum PublishType {
   Global,
   Guild,
